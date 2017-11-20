@@ -7,12 +7,14 @@ import 'mui/dist/css/mui.css';
 import 'mui/examples/hello-mui/css/icons-extra.css';
 import axios from 'axios';
 import VueRouter from 'vue-router';
+import Filter from '../filter' 
 
 
 //启用VUE插件
 Vue.use(MintUi);
 Vue.use(Common);
 Vue.use(VueRouter);
+Vue.use(Filter);
 
 //导入根组件
 import AppComponent from '../component/App.vue';

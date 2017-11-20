@@ -1,5 +1,6 @@
 <template>
-   <nav class="mui-bar mui-bar-tab">
+    <footer>
+        <nav class="mui-bar mui-bar-tab">
 			<router-link class="mui-tab-item mui-active" to='/'>
 				<span class="mui-icon mui-icon-home"></span>
 				<span class="mui-tab-label">首页</span>
@@ -16,15 +17,19 @@
 				<span class="mui-icon mui-icon-gear"></span>
 				<span class="mui-tab-label">设置</span>
 			</router-link>
-	</nav>
+	    </nav>
+        <i></i>
+    </footer>
+   
 </template>
 
 <script>
-export default {
-  
-}
+export default {};
 </script>
 
 <style scoped>
-
+    i{
+        display: block;
+        height: 50px;
+    }
 </style>
