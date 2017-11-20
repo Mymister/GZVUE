@@ -9,7 +9,12 @@ export default{
     getND:`${domain}/getnew/`,
 
     // 图片接口
+    getPC:`${domain}/getimgcategory/`,
+    getPL:`${domain}/getimages/`, // 该接口后面需要一个分类id: /getimages/:id
+    getPD:`${domain}/getimageinfo/` , // 该接口后面需要一个图片id: /getimageinfo/:id
+    getPT: `${domain}/getthumimages/`,  // 该接口后面需要一个图片id: /getthumimages/:id
 
+    
     // 商品接口
 
     // 评论接口
