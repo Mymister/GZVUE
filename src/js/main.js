@@ -8,7 +8,8 @@ import 'mui/examples/hello-mui/css/icons-extra.css';
 import axios from 'axios';
 import VueRouter from 'vue-router';
 import Filter from '../filter' ;
-import '../less/index.less'
+import '../less/index.less';
+import VuePP from 'vue-picture-preview'
 
 
 //启用VUE插件
@@ -16,6 +17,7 @@ Vue.use(MintUi);
 Vue.use(Common);
 Vue.use(VueRouter);
 Vue.use(Filter);
+Vue.use(VuePP);
 
 
 // 2.2 导入配置
