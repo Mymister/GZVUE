@@ -1,13 +1,18 @@
 <template>
   <article class="goods-detail">
-
+      <!-- 轮播图 -->
+        <mt-swipe :auto="4000">
+            <mt-swipe-item v-for="item in lunbos" v-bind:key="item.src"> 
+                    <img v-bind:src="item.src">
+            </mt-swipe-item>
+        </mt-swipe>
   	<!-- 商品购买 -->
     <div class="mui-card">
       <!-- 名称 -->
-      <div class="mui-card-header">小米666</div>
+      <div class="mui-card-header">{{goodsPrice.title}}</div>
       <!-- 价格 -->
       <div class="mui-card-content mui-card-content-inner">
-        <div class="price"> <s>市场价:￥8888</s> <span>销售价: </span> <em>￥888</em> </div>
+        <div class="price"> <s>市场价:￥{{goodsPrice.market_price}}</s> <span>销售价: </span> <em>￥{{goodsPrice.sell_price}}</em> </div>
         <div> <span>购买数量：</span>
           <!--数字输入框 -->
           <div class="mui-numbox">
@@ -48,7 +53,30 @@
 
 <script>
 export default {
-  
+  data(){
+      return{
+          id:this.$route.params.id,
+          lunbos:[],
+          goodsPrice:{},
+      }
+  },
+
+  methods:{
+      getGoodsThumList(){
+          this.axios.get(this.api.goodsT+this.id)
+          .then(rep => this.lunbos=rep.data.message);
+      },
+      
+      getGoodsPrice(){
+          this.axios.get(this.api.goodsP + this.id)
+          .then(rep => this.goodsPrice = rep.data.message[0]);
+      }
+  },
+
+  created(){
+      this.getGoodsThumList();
+      this.getGoodsPrice();
+  }
 }
 </script>
 
@@ -86,6 +114,18 @@ export default {
     .mint-tab-item-label {
     	font-size: 18px;
     	color: #2ce094;
+    }
+  }
+
+  // 给轮播图加个高度
+  .mint-swipe {
+    height: 260px;
+    background-color: white;
+    img {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: 260px;
     }
   }
 </style>
