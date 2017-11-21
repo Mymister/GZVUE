@@ -7,9 +7,8 @@
       	<router-link v-bind:to="{ name: 'gd', params: { id: item.id } }">
 	        <div class="mui-card">
 	          <!-- 商品图片 -->
-	          <div class="mui-card-header" style="height:100px">
-	          	<img v-bind:src="item.img_url" alt="" style="width:100%;
-  			height: 100%">
+	          <div class="mui-card-header" >
+	          	<img v-bind:src="item.img_url" alt="" >
 	          </div>
 	          <!-- 商品描述 -->
 	          <div class="mui-card-footer ">
@@ -31,8 +30,8 @@
       </li>
     </ul>
     <!-- 加载更多 -->
-    <button v-on:click="loadMore()"
-      class="mui-btn mui-btn-success mui-btn-block mui-btn-outlined">加载更多</button>
+    <button v-on:click="loadMore()" v-bind:disabled='lastPage' 
+      class="mui-btn mui-btn-success mui-btn-block mui-btn-outlined">{{lastPage?'已经是最后一页了': '加载更多'}}</button>
   </article>
 </template>
 
@@ -42,26 +41,39 @@ export default {
       return{
           goodsList:[],
           pageIndex:1,
-          isEmpty:false //// 后台数据是否为空
+        //   isEmpty:false //// 后台数据是否为空
+        lastPage:false  //是否最后一页
       }
   },
 
   methods:{
       // 获取商品列表, 需要一个pageindex查询字符串, 用来指定页码
       getGoodsList(){
-          if(!this.isEmpty){
-              this.axios.get(`${this.api.goodsL}?pageindex=${this.pageIndex}`)
-        .then((rsp) => {this.goodsList.push(...rsp.data.message); // 这里请求回来的数据使用...符号拆分得到每一个对象, 单独push到goodsList列表
-          if(rsp.data.message.length == 0) { // 如果请求回来的数据为空, 那么下次就不要再请求了
-            this.isEmpty = true;
-             }
-            });
-        }
+        //   if(!this.isEmpty){
+        //       this.axios.get(`${this.api.goodsL}?pageindex=${this.pageIndex}`)
+        //      .then((rsp) => {this.goodsList.push(...rsp.data.message); // 这里请求回来的数据使用...符号拆分得到每一个对象, 单独push到goodsList列表
+        //   if(rsp.data.message.length == 0) { // 如果请求回来的数据为空, 那么下次就不要再请求了
+        //     this.isEmpty = true;
+        //      }
+        //     });
+        // }
+            this.axios.get(`${this.api.goodsL}?pageindex=${this.pageIndex}`)
+           .then(rep => {
+                        this.goodsList.push(...rep.data.message);
+                        this.isLastPath(rep.data.message);
+                 })
       },
       //加载下一页数据
         loadMore(){
             this.pageIndex++;
             this.getGoodsList();
+        },
+
+        // 判断是不是最后一页数据, 是的话把lastPage设为ture
+        isLastPath(goodsList){
+            if(goodsList.length==0){
+                this.lastPage=true;
+            }
         }
   }, 
         created(){
@@ -71,7 +83,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .goods-list {
   	.mui-card {
   		box-shadow: 0px 0px 4px rgba(0, 0, 0, .3);
   	}
@@ -103,5 +114,4 @@ export default {
         }
       }
     }
-  }
 </style>
