@@ -58,7 +58,6 @@ export default {
           id:this.$route.params.id,
           lunbos:[],
           goodsPrice:{},
-           navbarSelector: 'commont'
       }
   },
 
