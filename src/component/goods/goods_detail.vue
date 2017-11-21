@@ -15,11 +15,7 @@
         <div class="price"> <s>市场价:￥{{goodsPrice.market_price}}</s> <span>销售价: </span> <em>￥{{goodsPrice.sell_price}}</em> </div>
         <div> <span>购买数量：</span>
           <!--数字输入框 -->
-          <div class="mui-numbox">
-          	<button class="mui-btn mui-btn-numbox-minus">-</button>
-          	<input class="mui-input-numbox" type="number">
-          	<button class="mui-btn mui-btn-numbox-plus">+</button>
-          </div>
+         <app-numbox initVal="1" @change="getTotal"></app-numbox>
         </div>
       </div>
       <!-- 按钮 -->
@@ -43,7 +39,7 @@
 			    <p>评论1</p>
 			  </mt-tab-container-item>
 			  <mt-tab-container-item id="intro">
-			   <p>介绍1</p>
+			   <app-intro v-bind:id="id"></app-intro>
 			  </mt-tab-container-item>
 			</mt-tab-container>
 		</div>
@@ -52,13 +48,17 @@
 </template>
 
 <script>
+
+import IntroComponent from './son/intro.vue';
+
+
 export default {
   data(){
       return{
           id:this.$route.params.id,
           lunbos:[],
           goodsPrice:{},
-          navbarSelector: 'commont'
+           navbarSelector: 'commont'
       }
   },
 
@@ -71,12 +71,24 @@ export default {
       getGoodsPrice(){
           this.axios.get(this.api.goodsP + this.id)
           .then(rep => this.goodsPrice = rep.data.message[0]);
-      }
+      } ,
+      
+      // 获取最新的购买数量
+    getTotal(total) {
+       console.log(total);
+     },
+   
   },
+
+ 
 
   created(){
       this.getGoodsThumList();
       this.getGoodsPrice();
+  },
+
+  components:{
+      'app-intro':IntroComponent
   }
 }
 </script>

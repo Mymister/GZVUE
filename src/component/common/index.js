@@ -1,6 +1,7 @@
 //编写属于自己的公共VUE组件库
 import HeaderComponent from './header.vue';
 import FooterComponent from './footer.vue';
+import NumboxComponent from './numbox.vue';
 
 
 //Vue插件要求提供install方法，这个方法会被注入Vue
@@ -9,5 +10,6 @@ export default{
     install(Vue){
         Vue.component('app-header',HeaderComponent);
         Vue.component('app-footer',FooterComponent);
+        Vue.component('app-numbox',NumboxComponent);
     }
 }
