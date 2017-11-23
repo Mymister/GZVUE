@@ -11,7 +11,8 @@
           <ul>
             <li>￥{{ item.sell_price }}</li>
             <li>
-              <div class="mui-numbox"> <button class="mui-btn mui-btn-numbox-minus">-</button> <input class="mui-input-numbox" type="number"> <button class="mui-btn mui-btn-numbox-plus">+</button> </div>
+              <!-- <div class="mui-numbox"> <button class="mui-btn mui-btn-numbox-minus">-</button> <input class="mui-input-numbox" type="number"> <button class="mui-btn mui-btn-numbox-plus">+</button> </div> -->
+              <app-numbox v-bind:initVal='goodsBuyData[item.id]' @change="modifyBuyData(item.id,$event)"></app-numbox>
             </li>
             <li>
               <a href="javascript:void(0)">删除</a>
@@ -60,6 +61,11 @@ export default {
           this.buyGoodsList = rsp.data.message;
         }
       );
+    },
+
+    //修改购买数据
+    modifyBuyData(id,val){
+        this.goodsBuyData[id]=val;
     }
   },
 
@@ -84,7 +90,18 @@ export default {
         // 如果商品为选中状态我们就累加, 否则原物传递到下一次计算
         return goods.isSelected? sum + this.goodsBuyData[goods.id] * goods.sell_price : sum
       }, 0);
-    }
+    },
+  },
+
+  watch:{
+       // 监听商品数量的变化, 实时存储的本地storage
+     goodsBuyData:{
+         handler(){
+             storage.set('goodsBuyData',this.goodsBuyData)
+         },
+         // 深度监听对象的变化, 这样vue每次会比较子属性的值
+         deep:true
+     } 
   }
 };
 </script>
