@@ -50,10 +50,15 @@ export default {
   methods: {
     // 获取购物车列表数据
     getBuyGoodsList() {
-      let ids = Object.keys(storage.get("goodsBuyData")).join(",");
-      this.axios
-        .get(this.api.shopcL + ids)
-        .then(rep => (this.buyGoodsList = rep.data.message));
+      let ids = Object.keys(storage.get('goodsBuyData')).join(',');
+      this.axios.get(this.api.shopcL + ids)
+      .then( 
+        rsp => {
+          // 给每个商品补充一个isSelected属性, 默认值为true
+          rsp.data.message.forEach(goods => goods.isSelected = true);
+          this.buyGoodsList = rsp.data.message;
+        }
+      );
     },
     // 通过商品id获取对应数据
     getBuyCountById(id) {
