@@ -38,114 +38,123 @@
 </template>
 
 <script>
-import storage from '../../js/storage.js';
+import storage from "../../js/storage.js";
 
 export default {
-    data(){
-        return{
-            buyGoodsList:[]
-        }
+  data() {
+    return {
+      buyGoodsList: []
+    };
+  },
+
+  methods: {
+    // 获取购物车列表数据
+    getBuyGoodsList() {
+      let ids = Object.keys(storage.get("goodsBuyData")).join(",");
+      this.axios
+        .get(this.api.shopcL + ids)
+        .then(rep => (this.buyGoodsList = rep.data.message));
+    },
+    // 通过商品id获取对应数据
+    getBuyCountById(id) {
+      return storage.get("goodsBuyData")[id];
+    }
+  },
+
+  created() {
+    this.getBuyGoodsList();
+  },
+
+  computed: {
+    //     // 已勾选的商品总件数
+    //     selectedGoodsTotal(){
+    //        // 遍历购物车商品列表, 如果该商品是选中状态, 那么获取这个商品的购买数量累加起来
+    //        let sum = 0;
+    //        this.buyGoodsList.forEach((goods) => {
+    //            if(goods.isSelected){
+    //                sum += this.getBuyCountById(goods.id);
+    //            }
+    //        });
+    //        return sum;
+    //     },
+    selectedGoodsTotal() {
+      return this.buyGoodsList.reduce((sum, goods) => {
+        return goods.isSelected ? sum + this.getBuyCountById(goods.id) : sum;
+      }, 0);
     },
 
-    methods:{
-        // 获取购物车列表数据
-        getBuyGoodsList(){
-            let ids=Object.keys(storage.get('goodsBuyData')).join(',');
-            this.axios.get(this.api.shopcL + ids)
-            .then( rep => this.buyGoodsList = rep.data.message);
-        },
-         // 通过商品id获取对应数据
-         getBuyCountById(id){
-             return storage.get('goodsBuyData')[id];
-         }
-    },
-
-    created(){
-        this.getBuyGoodsList();
-    },
-
-    computed:{
-        // 已勾选的商品总件数
-        selectedGoodsTotal(){
-           // 遍历购物车商品列表, 如果该商品是选中状态, 那么获取这个商品的购买数量累加起来 
-           let sum = 0;
-           this.buyGoodsList.forEach((goods) => {
-               if(goods.isSelected){
-                   sum += this.getBuyCountById(goods.id);
-               }
-           });
-           return sum;
-        },
-
-        // 已勾选的商品总价
-        selectedGoodsPriceTotal() {
-        
-    }
-        
-    }
-}
-</script>
-
-
-<style lang="less">
-  .shopcart-list {
-    .goods {
-      border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-      height: 102px;
-      display: flex;
-      padding: 5px;
-      .switch {
-        flex: 0 0 52px;
-      }
-      .img {
-        margin-left: 5px;
-        height: 75px;
-        width: 75px;
-        flex: 0 0 85px;
-      }
-      .inforight {
-        margin-left: 5px;
-        flex: 1;
-      }
-      .inforight ul {
-        padding-left: 0px;
-      }
-      .inforight li {
-        list-style: none;
-        display: inline-block;
-      }
-      .inforight h4 {
-        color: #0094ff;
-        font-size: 14px;
-      }
-      .bottom li:first-child {
-        color: red;
-        margin-right: 5px;
-      }
-      .bottom li:last-child {
-        margin-left: 5px;
-      }
-    }
-    .total {
-      height: 84px;
-      background-color: rgba(0, 0, 0, 0.1);
-      display: flex;
-      padding: 5px 14px;
-      ul {
-		    padding-left: 0px;
-		    margin: 14px 0;
-		    li {
-		      list-style: none;
-		      font-size: 14px;
-		    }
-		  }
-		  &_val {
-		  	flex: 1;
-		  }
-		  &_btn {
-		  	flex: 0 0 60px;
-	      margin: 18px 0 0 0;
-		  }
+    // 已勾选的商品总价
+    selectedGoodsPriceTotal() {
+      // 遍历购物车商品列表, 如果该商品是选中状态, 那么获取这个商品的价格 * 购买数量, 然后结果累加起来
+      return this.buyGoodsList.reduce((sum, goods) => {
+        return goods.isSelected
+          ? sum + this.getBuyCountById(goods.id) * goods.sell_price
+          : sum;
+      }, 0);
     }
   }
+};
+</script>
+
+<style lang="less">
+.shopcart-list {
+  .goods {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    height: 102px;
+    display: flex;
+    padding: 5px;
+    .switch {
+      flex: 0 0 52px;
+    }
+    .img {
+      margin-left: 5px;
+      height: 75px;
+      width: 75px;
+      flex: 0 0 85px;
+    }
+    .inforight {
+      margin-left: 5px;
+      flex: 1;
+    }
+    .inforight ul {
+      padding-left: 0px;
+    }
+    .inforight li {
+      list-style: none;
+      display: inline-block;
+    }
+    .inforight h4 {
+      color: #0094ff;
+      font-size: 14px;
+    }
+    .bottom li:first-child {
+      color: red;
+      margin-right: 5px;
+    }
+    .bottom li:last-child {
+      margin-left: 5px;
+    }
+  }
+  .total {
+    height: 84px;
+    background-color: rgba(0, 0, 0, 0.1);
+    display: flex;
+    padding: 5px 14px;
+    ul {
+      padding-left: 0px;
+      margin: 14px 0;
+      li {
+        list-style: none;
+        font-size: 14px;
+      }
+    }
+    &_val {
+      flex: 1;
+    }
+    &_btn {
+      flex: 0 0 60px;
+      margin: 18px 0 0 0;
+    }
+  }
+}
 </style>
