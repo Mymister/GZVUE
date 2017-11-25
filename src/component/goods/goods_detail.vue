@@ -82,11 +82,18 @@ export default {
       this.buyCount = total;
     },
 
-    // 加入购物车
-    addShopcart() {
-      let oldBuyData = storage.get('goodsBuyData') || {};  // 取出旧的值
-      oldBuyData[this.id] = this.buyCount;                 // 添加或修改商品的购买记录
-      storage.set('goodsBuyData', oldBuyData);             // 把新的数据存起来
+    // // 加入购物车
+    // addShopcart() {
+    //   let oldBuyData = storage.get('goodsBuyData') || {};  // 取出旧的值
+    //   oldBuyData[this.id] = this.buyCount;                 // 添加或修改商品的购买记录
+    //   storage.set('goodsBuyData', oldBuyData);             // 把新的数据存起来
+    // }
+    // 加入购物车, 调用vuex中提供的修改方法即可
+    addShopcart(){
+        this.$store.commit('upBuyData',{
+            id:this.id,
+            total:this.buyCount
+        });
     }
   },
 
